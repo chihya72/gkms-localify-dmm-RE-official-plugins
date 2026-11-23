@@ -1,5 +1,7 @@
 # Gakumas Localify 官方插件
 
+源码仓库：[官方插件](https://github.com/chihya72/gkms-localify-dmm-RE-official-plugins) · [RE 框架与 SDK](https://github.com/chihya72/gkms-localify-dmm-RE)
+
 这是独立于 RE 框架的官方插件源码与发布仓库，包含 14 个插件、共享设置界面和文本/贴图资源更新实现。框架的 SDK、宿主、原生入口和管理器位于另一个仓库 `gkms-localify-dmm-RE`。
 
 插件只引用 NuGet 包 `Gkms.Sdk 2.0.0`，不引用框架源码或项目，也不需要框架管理器来生成仓库清单。两个仓库可放在任意位置；构建时显式传入 SDK 包所在目录。
@@ -33,7 +35,7 @@ if (-not $? -or $LASTEXITCODE -ne 0) { throw '官方插件构建失败' }
 
 将离线仓库 ZIP 放入框架的 `gakumas-local\re` 目录，即可在插件库按需安装；也可将两个发行目录中的 `gakumas-local` 合并部署，所有插件默认关闭。文本、贴图数据由各自插件另行下载，框架内置字体不随插件发布。
 
-在线发布时，将索引和插件 ZIP 放到 HTTPS 托管目录，并在管理器的官方来源中设置索引地址。正式发布应使用按版本区分的 ZIP 地址，先上传安装包，最后更新索引。当前仅生成本地发行文件，没有预设或创建远程仓库。
+在线发布时，将索引和插件 ZIP 放到 HTTPS 托管目录，并在管理器的官方来源中设置索引地址。正式发布应使用按版本区分的 ZIP 地址，先上传安装包，最后更新索引。源码远程仓库已建立；当前仅生成本地发行文件，订阅索引和安装包尚未上传。源码仓库地址不是插件订阅地址，需在实际发布索引后配置其原始 JSON 地址。
 
 ## 仓库结构
 
@@ -75,7 +77,7 @@ RE 仓库保留已有框架与插件联合回归套件，使用本仓库的编�
 
 ```powershell
 $parameters = @{
-    OfficialPluginOutput = 'D:\chinosk6\gkms-official-plugins\out\Release'
+    OfficialPluginOutput = 'D:\chinosk6\gkms-localify-dmm-RE-official-plugins\out\Release'
     Configuration = 'Release'
     Overlay = $true
 }
