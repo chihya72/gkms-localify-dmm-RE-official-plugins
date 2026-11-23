@@ -1,6 +1,6 @@
-param([Parameter(Mandatory = $true)][string]$StageRoot, [string]$ReleaseTag)
+param([Parameter(Mandatory = $true)][string]$StageRoot, [string]$PackageRevision = 'main')
 $ErrorActionPreference = 'Stop'
-if ($ReleaseTag -and $ReleaseTag -notmatch '^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') { throw 'ReleaseTag must be a version tag such as v1.0.0.' }
+if ($PackageRevision -notmatch '^[A-Za-z0-9._-]+$') { throw 'PackageRevision must be a Git revision.' }
 $StageRoot = (Resolve-Path -LiteralPath $StageRoot).Path
 $packages = Join-Path $StageRoot 'plugin-packages'
 $runtime = Join-Path $StageRoot 'gakumas-local\re'
@@ -68,16 +68,17 @@ try {
 Move-Item -LiteralPath $temporary -Destination $bundlePath -Force
 Write-Output "Published $($entries.Count) official plugins: $masterPath"
 Write-Output "Offline bundle: $bundlePath"
-if ($ReleaseTag) {
-    # Keep relative links inside the offline bundle; online indexes use immutable release URLs.
+& {
+    # Offline links remain relative. Published online links address the Git commit containing the ZIPs.
     $online = Join-Path $StageRoot 'online'
     [void][IO.Directory]::CreateDirectory($online)
-    $baseUrl = "https://github.com/chihya72/gkms-localify-dmm-RE-official-plugins/releases/download/$ReleaseTag/"
+    $baseUrl = "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/$PackageRevision/packages/"
     foreach ($entry in $entries) {
-        $entry.DownloadLinkInstall = $baseUrl + $entry.DownloadLinkInstall
-        $entry.DownloadLinkUpdate = $baseUrl + $entry.DownloadLinkUpdate
+        $name = [IO.Path]::GetFileNameWithoutExtension($entry.Assembly) + '-' + $entry.AssemblyVersion + '.zip'
+        $entry.DownloadLinkInstall = $baseUrl + $name
+        $entry.DownloadLinkUpdate = $baseUrl + $name
     }
-    foreach ($entry in $legacy) { $entry.downloadUrl = $baseUrl + $entry.downloadUrl }
+    foreach ($entry in $legacy) { $entry.downloadUrl = $baseUrl + [IO.Path]::GetFileNameWithoutExtension($entry.assembly) + '-' + $entry.version + '.zip' }
     ConvertTo-Json -InputObject @($entries) -Depth 30 | Set-Content -LiteralPath (Join-Path $online 'pluginmaster.json') -Encoding utf8NoBOM
     $index | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $online 'index.json') -Encoding utf8NoBOM
     Write-Output "Online indexes: $online"

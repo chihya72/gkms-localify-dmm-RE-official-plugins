@@ -1,58 +1,36 @@
 # Gakumas Localify 官方插件
 
-源码仓库：[官方插件](https://github.com/chihya72/gkms-localify-dmm-RE-official-plugins) · [RE 框架与 SDK](https://github.com/chihya72/gkms-localify-dmm-RE)
+[RE 框架与 SDK](https://github.com/chihya72/gkms-localify-dmm-RE) · [源码](https://github.com/chihya72/gkms-localify-dmm-RE-official-plugins)
 
-这是独立于 RE 框架的官方插件源码与发布仓库，包含 14 个插件、共享设置界面和文本/贴图资源更新实现。框架的 SDK、宿主、原生入口和管理器位于另一个仓库 `gkms-localify-dmm-RE`。
+本仓库维护 14 个官方插件的源码和订阅源，不创建插件 GitHub Release。
 
-插件只引用 NuGet 包 `Gkms.Sdk 2.0.3`，不引用框架源码或项目，也不需要框架管理器来生成仓库清单。两个仓库可放在任意位置；构建时显式传入 SDK 包所在目录。
+## 订阅安装
 
-## 构建与发布
+在框架的「订阅源」中使用以下地址，新版框架已内置：
 
-需要 PowerShell 7 和 .NET SDK 8 或以上。先在 RE 框架仓库运行 `Build.ps1`，取得 `out\sdk\Gkms.Sdk.2.0.3.nupkg`，或使用已准备好的同版本 SDK 包目录。然后在本仓库执行：
+```text
+https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/main/pluginmaster.json
+```
+
+在「插件库」选择插件安装，再到「已安装」启用。文本和贴图资源在对应插件的「资源更新」中下载。
+
+根目录的 `pluginmaster.json` 和 `index.json` 由 Actions 自动生成；`packages` 保存带版本号的 ZIP。索引中的下载地址指向保存安装包的 Git 提交，缓存的旧索引仍能下载对应版本。
+
+## 构建与自动发布
+
+需要 PowerShell 7、.NET SDK 8 或以上及 `Gkms.Sdk.2.0.4.nupkg`。SDK 从[框架 Release](https://github.com/chihya72/gkms-localify-dmm-RE/releases/latest) 下载，或在框架源码中打包。
 
 ```powershell
 $parameters = @{
-    Configuration = 'Release'
     SdkFeed = 'D:\chinosk6\gkms-localify-dmm-RE\out\sdk'
 }
 & (Join-Path $PWD 'Plugins\Build-Repository.ps1') @parameters
 if (-not $? -or $LASTEXITCODE -ne 0) { throw '官方插件构建失败' }
 ```
 
-`SdkFeed` 可以指向任何存有 SDK 包的目录，不要求框架源码存在。SDK 包缓存位于本仓库的 `out\.packages`。更新 SDK 时应递增 SDK 包版本，并同步 `Plugins\Plugin.targets` 中的依赖版本。
+输出位于 `out\Release`：`plugin-packages` 是安装包和本地索引，`online` 是 Raw 索引，`gakumas-local\re\official-plugins.zip` 是供本地使用的离线合集。插件只通过 SDK NuGet 包构建，不引用框架实现项目。
 
-输出均位于本仓库 `out\Release`：
-
-| 输出 | 用途 |
-| --- | --- |
-| `plugin-packages\pluginmaster.json` | Gkms 数组式订阅索引 |
-| `plugin-packages\index.json` | 兼容已有管理器的对象式索引 |
-| `plugin-packages\Gkms.*.zip` | 14 个独立插件安装包 |
-| `gakumas-local\re\official-plugins.zip` | 两种索引及所有安装包组成的离线官方仓库 |
-| `gakumas-local\re\plugins` | 可合并部署的插件目录 |
-
-`Plugins\Export-Repository.ps1 -StageRoot <输出目录>` 可单独从已构建的安装包导出索引。它根据各插件清单生成元数据，并核对包内 ID、版本、API、程序集，不依赖 RE 的 Host 或 Manager。
-
-将离线仓库 ZIP 放入框架的 `gakumas-local\re` 目录，即可在插件库按需安装；也可将两个发行目录中的 `gakumas-local` 合并部署，所有插件默认关闭。文本、贴图数据由各自插件另行下载，框架内置字体不随插件发布。
-
-[下载最新插件合集与独立安装包](https://github.com/chihya72/gkms-localify-dmm-RE-official-plugins/releases/latest)。框架已内置官方订阅源：
-
-```text
-https://github.com/chihya72/gkms-localify-dmm-RE-official-plugins/releases/latest/download/pluginmaster.json
-```
-
-发布构建向 `Build-Repository.ps1` 传入 `-ReleaseTag v1.0.0`，在 `out\Release\online` 生成使用该版本下载链接的两个在线索引；离线 ZIP 仍使用包内相对路径。合集标签与各插件清单版本分别管理，插件内容发生变化时递增其清单版本。
-
-Actions 在提交和 PR 时通过 SDK NuGet 包构建插件，并运行框架联合测试与在线/离线索引检查。推送 `vX.Y.Z` 标签后，先上传完整草稿 Release，再公开索引和安装包；预发布标签不会替换稳定版订阅源。CI 中的框架检出仅用于打包 SDK 和运行测试，插件项目仍只引用 NuGet 包。
-
-## 仓库结构
-
-- `Plugins`：14 个插件及公共编译/打包设置；每个插件拥有独立 DLL、清单与版本。
-- `Tools\Resources`：汉化资源下载、解包、回滚实现，由文本与贴图插件编译使用。
-- `Gkms.OfficialPlugins.sln`：只构建官方插件。
-- `Directory.Build.props`、`NuGet.Config`：独立构建配置与依赖来源。
-
-源码迁自 `gkms-localify-dmm-RE` 当前工作区，包含拆分前尚未提交的修复，原框架 Git 历史保留。沿用原项目的 GPL-3.0 许可证，见 [LICENSE](LICENSE)。
+Actions 在 PR 和源码提交时构建并执行联合测试；只有 `main` 验证通过后，才将 ZIP 和索引提交回同一仓库。插件功能变化时递增对应 `plugin.json` 的版本，不需要插件合集标签或 Release。更新同时保留旧包的 Git 历史。
 
 ## 官方 14 个插件
 

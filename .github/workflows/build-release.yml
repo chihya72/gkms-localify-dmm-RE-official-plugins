@@ -1,8 +1,11 @@
-name: Build, test and release
+name: Build, test and publish subscription
 on:
   push:
     branches: [main]
-    tags: ['v*']
+    paths-ignore:
+      - 'packages/**'
+      - 'pluginmaster.json'
+      - 'index.json'
   pull_request:
   workflow_dispatch:
 
@@ -10,7 +13,7 @@ permissions:
   contents: read
 concurrency:
   group: plugins-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+  cancel-in-progress: false
 
 defaults:
   run:
@@ -38,10 +41,9 @@ jobs:
           [string[]]$arguments = @('pack', (Join-Path $framework 'Sdk\Gkms.Sdk.csproj'), '-c', 'Release', '-o', (Join-Path $PWD 'out\sdk'))
           & dotnet @arguments
           if ($LASTEXITCODE -ne 0) { throw 'SDK packaging failed' }
-      - name: Build plugins and versioned subscription indexes
+      - name: Build plugins and raw subscription indexes
         run: |
-          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { 'v0.0.0-ci' }
-          $parameters = @{ SdkFeed = (Join-Path $PWD 'out\sdk'); ReleaseTag = $tag }
+          $parameters = @{ SdkFeed = (Join-Path $PWD 'out\sdk') }
           & (Join-Path $PWD 'Plugins\Build-Repository.ps1') @parameters
           if (-not $? -or $LASTEXITCODE -ne 0) { throw 'Plugin packaging failed' }
       - name: Run framework integration and native overlay tests
@@ -55,34 +57,35 @@ jobs:
           if (-not $?) { throw 'Catalog verification failed' }
       - uses: actions/upload-artifact@v7
         with:
-          name: official-plugins-release
+          name: official-plugin-subscription
           path: |
             out/Release/online/*.json
             out/Release/plugin-packages/*.zip
             out/Release/gakumas-local/re/official-plugins.zip
           if-no-files-found: error
           retention-days: 14
-  release:
-    if: startsWith(github.ref, 'refs/tags/v')
+  publish:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: verify
     runs-on: windows-2022
     timeout-minutes: 15
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
       - uses: actions/download-artifact@v8
         with:
-          name: official-plugins-release
-          path: artifacts
-      - name: Publish complete official repository
-        env:
-          GH_TOKEN: ${{ github.token }}
+          name: official-plugin-subscription
+          path: out/publish
+      - name: Publish ZIPs and raw indexes to the source repository
         run: |
-          $assets = @(Get-ChildItem -LiteralPath (Join-Path $PWD 'artifacts') -Recurse -File | ForEach-Object FullName)
-          [string[]]$arguments = @('release', 'create', $env:GITHUB_REF_NAME, '--repo', $env:GITHUB_REPOSITORY, '--verify-tag', '--draft', '--title', "Official plugins $env:GITHUB_REF_NAME", '--generate-notes') + $assets
-          & gh @arguments
-          if ($LASTEXITCODE -ne 0) { throw 'Draft release upload failed' }
-          [string[]]$arguments = @('release', 'edit', $env:GITHUB_REF_NAME, '--repo', $env:GITHUB_REPOSITORY, '--draft=false')
-          if ($env:GITHUB_REF_NAME.Contains('-')) { $arguments += '--prerelease' } else { $arguments += '--latest' }
-          & gh @arguments
-          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed' }
+          [string[]]$arguments = @('config', 'user.name', 'github-actions[bot]')
+          & git @arguments
+          if ($LASTEXITCODE -ne 0) { throw 'Git author setup failed' }
+          [string[]]$arguments = @('config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com')
+          & git @arguments
+          if ($LASTEXITCODE -ne 0) { throw 'Git email setup failed' }
+          & (Join-Path $PWD 'Plugins\Publish-Repository.ps1') -StageRoot (Join-Path $PWD 'out\publish')
+          if (-not $? -or $LASTEXITCODE -ne 0) { throw 'Subscription publication failed' }
