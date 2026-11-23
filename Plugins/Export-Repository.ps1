@@ -1,5 +1,6 @@
-param([Parameter(Mandatory = $true)][string]$StageRoot)
+param([Parameter(Mandatory = $true)][string]$StageRoot, [string]$ReleaseTag)
 $ErrorActionPreference = 'Stop'
+if ($ReleaseTag -and $ReleaseTag -notmatch '^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') { throw 'ReleaseTag must be a version tag such as v1.0.0.' }
 $StageRoot = (Resolve-Path -LiteralPath $StageRoot).Path
 $packages = Join-Path $StageRoot 'plugin-packages'
 $runtime = Join-Path $StageRoot 'gakumas-local\re'
@@ -67,3 +68,17 @@ try {
 Move-Item -LiteralPath $temporary -Destination $bundlePath -Force
 Write-Output "Published $($entries.Count) official plugins: $masterPath"
 Write-Output "Offline bundle: $bundlePath"
+if ($ReleaseTag) {
+    # Keep relative links inside the offline bundle; online indexes use immutable release URLs.
+    $online = Join-Path $StageRoot 'online'
+    [void][IO.Directory]::CreateDirectory($online)
+    $baseUrl = "https://github.com/chihya72/gkms-localify-dmm-RE-official-plugins/releases/download/$ReleaseTag/"
+    foreach ($entry in $entries) {
+        $entry.DownloadLinkInstall = $baseUrl + $entry.DownloadLinkInstall
+        $entry.DownloadLinkUpdate = $baseUrl + $entry.DownloadLinkUpdate
+    }
+    foreach ($entry in $legacy) { $entry.downloadUrl = $baseUrl + $entry.downloadUrl }
+    ConvertTo-Json -InputObject @($entries) -Depth 30 | Set-Content -LiteralPath (Join-Path $online 'pluginmaster.json') -Encoding utf8NoBOM
+    $index | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $online 'index.json') -Encoding utf8NoBOM
+    Write-Output "Online indexes: $online"
+}

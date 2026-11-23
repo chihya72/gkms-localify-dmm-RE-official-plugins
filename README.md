@@ -4,11 +4,11 @@
 
 这是独立于 RE 框架的官方插件源码与发布仓库，包含 14 个插件、共享设置界面和文本/贴图资源更新实现。框架的 SDK、宿主、原生入口和管理器位于另一个仓库 `gkms-localify-dmm-RE`。
 
-插件只引用 NuGet 包 `Gkms.Sdk 2.0.0`，不引用框架源码或项目，也不需要框架管理器来生成仓库清单。两个仓库可放在任意位置；构建时显式传入 SDK 包所在目录。
+插件只引用 NuGet 包 `Gkms.Sdk 2.0.1`，不引用框架源码或项目，也不需要框架管理器来生成仓库清单。两个仓库可放在任意位置；构建时显式传入 SDK 包所在目录。
 
 ## 构建与发布
 
-需要 PowerShell 7 和 .NET SDK 8 或以上。先在 RE 框架仓库运行 `Build.ps1`，取得 `out\sdk\Gkms.Sdk.2.0.0.nupkg`，或使用已准备好的同版本 SDK 包目录。然后在本仓库执行：
+需要 PowerShell 7 和 .NET SDK 8 或以上。先在 RE 框架仓库运行 `Build.ps1`，取得 `out\sdk\Gkms.Sdk.2.0.1.nupkg`，或使用已准备好的同版本 SDK 包目录。然后在本仓库执行：
 
 ```powershell
 $parameters = @{
@@ -25,7 +25,7 @@ if (-not $? -or $LASTEXITCODE -ne 0) { throw '官方插件构建失败' }
 
 | 输出 | 用途 |
 | --- | --- |
-| `plugin-packages\pluginmaster.json` | 卫月风格的 Gkms 数组式订阅索引 |
+| `plugin-packages\pluginmaster.json` | Gkms 数组式订阅索引 |
 | `plugin-packages\index.json` | 兼容已有管理器的对象式索引 |
 | `plugin-packages\Gkms.*.zip` | 14 个独立插件安装包 |
 | `gakumas-local\re\official-plugins.zip` | 两种索引及所有安装包组成的离线官方仓库 |
@@ -35,7 +35,15 @@ if (-not $? -or $LASTEXITCODE -ne 0) { throw '官方插件构建失败' }
 
 将离线仓库 ZIP 放入框架的 `gakumas-local\re` 目录，即可在插件库按需安装；也可将两个发行目录中的 `gakumas-local` 合并部署，所有插件默认关闭。文本、贴图数据由各自插件另行下载，框架内置字体不随插件发布。
 
-在线发布时，将索引和插件 ZIP 放到 HTTPS 托管目录，并在管理器的官方来源中设置索引地址。正式发布应使用按版本区分的 ZIP 地址，先上传安装包，最后更新索引。源码远程仓库已建立；当前仅生成本地发行文件，订阅索引和安装包尚未上传。源码仓库地址不是插件订阅地址，需在实际发布索引后配置其原始 JSON 地址。
+[下载最新插件合集与独立安装包](https://github.com/chihya72/gkms-localify-dmm-RE-official-plugins/releases/latest)。框架已内置官方订阅源：
+
+```text
+https://github.com/chihya72/gkms-localify-dmm-RE-official-plugins/releases/latest/download/pluginmaster.json
+```
+
+发布构建向 `Build-Repository.ps1` 传入 `-ReleaseTag v1.0.0`，在 `out\Release\online` 生成使用该版本下载链接的两个在线索引；离线 ZIP 仍使用包内相对路径。合集标签与各插件清单版本分别管理，插件内容发生变化时递增其清单版本。
+
+Actions 在提交和 PR 时通过 SDK NuGet 包构建插件，并运行框架联合测试与在线/离线索引检查。推送 `vX.Y.Z` 标签后，先上传完整草稿 Release，再公开索引和安装包；预发布标签不会替换稳定版订阅源。CI 中的框架检出仅用于打包 SDK 和运行测试，插件项目仍只引用 NuGet 包。
 
 ## 仓库结构
 

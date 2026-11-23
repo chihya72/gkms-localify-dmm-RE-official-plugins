@@ -1,0 +1,88 @@
+name: Build, test and release
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: plugins-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  verify:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            6.0.x
+            8.0.x
+      - uses: actions/checkout@v7
+        with:
+          repository: chihya72/gkms-localify-dmm-RE
+          path: out/framework-source
+          persist-credentials: false
+      - name: Package SDK for the independent plugin build
+        run: |
+          $framework = Join-Path $PWD 'out\framework-source'
+          [string[]]$arguments = @('pack', (Join-Path $framework 'Sdk\Gkms.Sdk.csproj'), '-c', 'Release', '-o', (Join-Path $PWD 'out\sdk'))
+          & dotnet @arguments
+          if ($LASTEXITCODE -ne 0) { throw 'SDK packaging failed' }
+      - name: Build plugins and versioned subscription indexes
+        run: |
+          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { 'v0.0.0-ci' }
+          $parameters = @{ SdkFeed = (Join-Path $PWD 'out\sdk'); ReleaseTag = $tag }
+          & (Join-Path $PWD 'Plugins\Build-Repository.ps1') @parameters
+          if (-not $? -or $LASTEXITCODE -ne 0) { throw 'Plugin packaging failed' }
+      - name: Run framework integration and native overlay tests
+        run: |
+          $parameters = @{ OfficialPluginOutput = (Join-Path $PWD 'out\Release'); Overlay = $true }
+          & (Join-Path $PWD 'out\framework-source\Tests\Test-OfficialPlugins.ps1') @parameters
+          if (-not $? -or $LASTEXITCODE -ne 0) { throw 'Integration tests failed' }
+      - name: Verify online and offline catalogs
+        run: |
+          & (Join-Path $PWD 'Plugins\Test-Repository.ps1') -StageRoot (Join-Path $PWD 'out\Release')
+          if (-not $?) { throw 'Catalog verification failed' }
+      - uses: actions/upload-artifact@v7
+        with:
+          name: official-plugins-release
+          path: |
+            out/Release/online/*.json
+            out/Release/plugin-packages/*.zip
+            out/Release/gakumas-local/re/official-plugins.zip
+          if-no-files-found: error
+          retention-days: 14
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: verify
+    runs-on: windows-2022
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: official-plugins-release
+          path: artifacts
+      - name: Publish complete official repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $assets = @(Get-ChildItem -LiteralPath (Join-Path $PWD 'artifacts') -Recurse -File | ForEach-Object FullName)
+          [string[]]$arguments = @('release', 'create', $env:GITHUB_REF_NAME, '--repo', $env:GITHUB_REPOSITORY, '--verify-tag', '--draft', '--title', "Official plugins $env:GITHUB_REF_NAME", '--generate-notes') + $assets
+          & gh @arguments
+          if ($LASTEXITCODE -ne 0) { throw 'Draft release upload failed' }
+          [string[]]$arguments = @('release', 'edit', $env:GITHUB_REF_NAME, '--repo', $env:GITHUB_REPOSITORY, '--draft=false')
+          if ($env:GITHUB_REF_NAME.Contains('-')) { $arguments += '--prerelease' } else { $arguments += '--latest' }
+          & gh @arguments
+          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed' }
