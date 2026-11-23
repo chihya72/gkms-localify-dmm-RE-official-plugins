@@ -1,7 +1,7 @@
 <Project>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)SettingsUi.cs" />
-    <PackageReference Include="Gkms.Sdk" Version="[2.0.1]" ExcludeAssets="runtime" />
+    <PackageReference Include="Gkms.Sdk" Version="[2.0.3]" ExcludeAssets="runtime" />
   </ItemGroup>
   <Target Name="StagePlugin" AfterTargets="Build">
     <ItemGroup>
