@@ -1,0 +1,87 @@
+{
+  "id": "graphics",
+  "punchline": "调整渲染比例、反射和画面细节。",
+  "category": "画面与窗口",
+  "tags": ["画质", "渲染", "graphics", "LOD"],
+  "name": "画质设置",
+  "apiVersion": 2,
+  "assembly": "Gkms.Graphics.dll",
+  "entryPoint": "Gkms.Plugins.Graphics.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.1",
+  "description": "调整游戏画质、渲染倍率、反射、后处理和细节质量；启用与配置重载立即应用当前画面，停用恢复游戏原设置。",
+  "settings": [
+    {
+      "key": "quality",
+      "label": "画质等级",
+      "type": "integer",
+      "default": 3,
+      "labels": {
+        "zh-TW": "畫質等級",
+        "en": "Quality level",
+        "ja": "品質レベル"
+      }
+    },
+    {
+      "key": "maxBufferPixel",
+      "label": "最大缓冲尺寸",
+      "type": "integer",
+      "default": 3384,
+      "labels": {
+        "zh-TW": "最大緩衝尺寸",
+        "en": "Maximum buffer size",
+        "ja": "最大バッファサイズ"
+      }
+    },
+    {
+      "key": "volumeIndex",
+      "label": "后处理档位",
+      "type": "integer",
+      "default": 3,
+      "labels": {
+        "zh-TW": "後製檔位",
+        "en": "Post-processing level",
+        "ja": "ポスト処理レベル"
+      }
+    },
+    {
+      "key": "renderScale",
+      "label": "渲染倍率",
+      "type": "number",
+      "default": 0.77,
+      "labels": {
+        "zh-TW": "算繪倍率",
+        "en": "Render scale",
+        "ja": "レンダリング倍率"
+      }
+    },
+    {
+      "key": "reflectionQuality",
+      "label": "反射质量索引（越界取最高档）",
+      "type": "integer",
+      "default": 4,
+      "labels": {
+        "zh-TW": "反射品質索引（越界取最高檔）",
+        "en": "Reflection index (out of range: highest)",
+        "ja": "反射品質番号（範囲外：最高）"
+      }
+    },
+    {
+      "key": "lodQuality",
+      "label": "细节质量索引（越界取最高档）",
+      "type": "integer",
+      "default": 4,
+      "labels": {
+        "zh-TW": "細節品質索引（越界取最高檔）",
+        "en": "Detail index (out of range: highest)",
+        "ja": "詳細度番号（範囲外：最高）"
+      }
+    }
+  ],
+  "names": {
+    "zh-TW": "畫質設定",
+    "en": "Graphics",
+    "ja": "画質設定"
+  },
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

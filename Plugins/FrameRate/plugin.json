@@ -1,0 +1,32 @@
+{
+  "id": "frame-rate",
+  "punchline": "自定义游戏和 Unity 的目标帧率。",
+  "category": "画面与窗口",
+  "tags": ["帧率", "FPS", "性能"],
+  "name": "帧率设置",
+  "apiVersion": 2,
+  "assembly": "Gkms.FrameRate.dll",
+  "entryPoint": "Gkms.Plugins.FrameRate.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.1",
+  "description": "设置游戏与 Unity 的目标帧率；热启用立即应用，停用恢复游戏原先请求的帧率。",
+  "settings": [
+    {
+      "key": "fps",
+      "label": "目标帧率",
+      "type": "integer",
+      "default": 60,
+      "labels": {
+        "zh-TW": "目標影格率",
+        "en": "Target FPS",
+        "ja": "目標 FPS"
+      }
+    }
+  ],
+  "names": {
+    "zh-TW": "影格率設定",
+    "en": "Frame rate",
+    "ja": "フレームレート"
+  },
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

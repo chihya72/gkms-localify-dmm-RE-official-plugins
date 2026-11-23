@@ -1,0 +1,48 @@
+{
+  "id": "window",
+  "punchline": "自由调整窗口尺寸、横竖屏与无边框全屏。",
+  "category": "画面与窗口",
+  "tags": ["窗口", "横屏", "竖屏", "全屏", "window"],
+  "name": "窗口设置",
+  "apiVersion": 2,
+  "assembly": "Gkms.Window.dll",
+  "entryPoint": "Gkms.Plugins.Window.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.2",
+  "description": "管理窗口方向、缩放和自由调整窗口尺寸。",
+  "settings": [
+    {
+      "key": "orientation",
+      "label": "方向",
+      "type": "string",
+      "default": "game",
+      "labels": {
+        "zh-TW": "方向",
+        "en": "Orientation",
+        "ja": "画面の向き"
+      },
+      "choices": [
+        "game",
+        "portrait",
+        "landscape"
+      ]
+    },
+    {
+      "key": "resizable",
+      "label": "自由调整大小",
+      "type": "boolean",
+      "default": true,
+      "labels": {
+        "zh-TW": "自由調整大小",
+        "en": "Resizable",
+        "ja": "サイズ変更可能"
+      }
+    }
+  ],
+  "names": {
+    "zh-TW": "視窗設定",
+    "en": "Window",
+    "ja": "ウィンドウ設定"
+  },
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

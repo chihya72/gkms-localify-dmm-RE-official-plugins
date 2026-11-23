@@ -1,0 +1,47 @@
+{
+  "id": "textures",
+  "punchline": "用独立汉化贴图包替换游戏界面图片。",
+  "category": "汉化资源",
+  "tags": ["汉化", "贴图", "图片", "textures"],
+  "name": "贴图翻译",
+  "apiVersion": 2,
+  "assembly": "Gkms.Textures.dll",
+  "entryPoint": "Gkms.Plugins.Textures.Plugin",
+  "resourceUpdater": "Gkms.Plugins.Textures.ResourceUpdater",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.1",
+  "description": "读取本地汉化贴图，替换对应界面图片，支持资源更新与重载。",
+  "settings": [
+    {
+      "key": "autoCheckUpdates",
+      "section": "resources",
+      "label": "启动时检查更新",
+      "type": "boolean",
+      "default": false,
+      "labels": {
+        "zh-TW": "啟動時檢查更新",
+        "en": "Check updates on load",
+        "ja": "起動時に更新確認"
+      }
+    },
+    {
+      "key": "updateSource",
+      "section": "resources",
+      "label": "默认更新源",
+      "type": "string",
+      "default": "",
+      "labels": {
+        "zh-TW": "預設更新來源",
+        "en": "Default update source",
+        "ja": "既定の更新元"
+      }
+    }
+  ],
+  "names": {
+    "zh-TW": "貼圖翻譯",
+    "en": "Texture translation",
+    "ja": "テクスチャ翻訳"
+  },
+  "canReloadResources": true,
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

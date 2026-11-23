@@ -1,0 +1,25 @@
+{
+  "id": "live-unlock",
+  "punchline": "分别控制 Live 与服装、头饰的可选范围。",
+  "category": "游戏辅助",
+  "tags": ["Live", "服装", "头饰", "解锁"],
+  "name": "Live、服装与头饰解锁",
+  "apiVersion": 2,
+  "assembly": "Gkms.LiveUnlock.dll",
+  "entryPoint": "Gkms.Plugins.LiveUnlock.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.1",
+  "description": "管理 Live、服装与头饰解锁；可独立选择 Live 与服装子功能，名片页面保留真实持有判断。",
+  "settings": [
+    { "key": "live", "label": "解锁 Live", "type": "boolean", "default": true,
+      "labels": { "zh-TW": "解鎖 Live", "en": "Unlock Live", "ja": "ライブ解放" } },
+    { "key": "costumes", "label": "解锁服装与头饰", "type": "boolean", "default": true,
+      "labels": { "zh-TW": "解鎖服裝與頭飾", "en": "Unlock costumes and heads", "ja": "衣装・頭部解放" } }
+  ],
+  "names": {
+    "zh-TW": "Live、服裝與頭飾解鎖",
+    "en": "Live, costume and head unlock",
+    "ja": "ライブ・衣装・頭部解放"
+  },
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

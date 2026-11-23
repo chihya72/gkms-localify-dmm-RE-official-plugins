@@ -1,0 +1,43 @@
+{
+  "id": "auto-photo",
+  "punchline": "按需要调整 Live 自动摄影的张数。",
+  "category": "摄影与镜头",
+  "tags": ["摄影", "Live", "photo"],
+  "name": "自动拍照",
+  "apiVersion": 2,
+  "assembly": "Gkms.AutoPhoto.dll",
+  "entryPoint": "Gkms.Plugins.AutoPhoto.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.0",
+  "description": "配置 Live 自动摄影的三个张数档位。",
+  "settings": [
+    {
+      "key": "counts",
+      "label": "拍照档位",
+      "type": "integer-array",
+      "default": [
+        10,
+        20,
+        30
+      ],
+      "min": 1,
+      "max": 2147483647,
+      "labels": {
+        "zh-TW": "拍照檔位",
+        "en": "Photo counts",
+        "ja": "撮影枚数"
+      },
+      "elementLabels": [
+        "1",
+        "2",
+        "3"
+      ]
+    }
+  ],
+  "names": {
+    "zh-TW": "自動拍照",
+    "en": "Auto photography",
+    "ja": "自動撮影"
+  },
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

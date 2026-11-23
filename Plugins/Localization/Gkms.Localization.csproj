@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Compile Include="..\..\Tools\Resources\ArchiveUpdate.cs;..\..\Tools\Resources\PackInstaller.cs;..\..\Tools\Resources\AutoResourceUpdate.cs" />
+  </ItemGroup>
+  <Import Project="..\Plugin.targets" />
+  <Target Name="RetireSplitPackages" AfterTargets="StagePlugin">
+    <ItemGroup>
+      <SplitPackage Include="Gkms.I18n;Gkms.Text;Gkms.Story;Gkms.Font;Gkms.Subtitles;Gkms.Master;Gkms.Lyrics" />
+    </ItemGroup>
+    <PropertyGroup><Stage>$(StageRoot)\gakumas-local\re\plugins</Stage></PropertyGroup>
+    <Delete Files="@(SplitPackage->'$(Stage)\%(Identity)\plugin.json');@(SplitPackage->'$(Stage)\%(Identity)\%(Identity).dll')" />
+  </Target>
+</Project>

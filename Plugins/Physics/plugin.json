@@ -1,0 +1,381 @@
+{
+  "id": "physics",
+  "punchline": "调节角色骨骼物理、缩放和轴向限位。",
+  "category": "画面与窗口",
+  "tags": ["物理", "骨骼", "physics"],
+  "name": "物理参数",
+  "apiVersion": 2,
+  "assembly": "Gkms.Physics.dll",
+  "entryPoint": "Gkms.Plugins.Physics.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.1",
+  "description": "调整角色骨骼物理、缩放及轴限位；启用与配置重载立即更新场景内角色，停用恢复原参数。",
+  "settings": [
+    {
+      "key": "damping",
+      "label": "阻尼",
+      "type": "number",
+      "default": 0.33,
+      "labels": {
+        "zh-TW": "阻尼",
+        "en": "Damping",
+        "ja": "減衰"
+      }
+    },
+    {
+      "key": "stiffness",
+      "label": "刚度",
+      "type": "number",
+      "default": 0.08,
+      "labels": {
+        "zh-TW": "剛度",
+        "en": "Stiffness",
+        "ja": "剛性"
+      }
+    },
+    {
+      "key": "spring",
+      "label": "弹力",
+      "type": "number",
+      "default": 1,
+      "labels": {
+        "zh-TW": "彈力",
+        "en": "Spring",
+        "ja": "弾性"
+      }
+    },
+    {
+      "key": "pendulum",
+      "label": "摆动",
+      "type": "number",
+      "default": 0.055,
+      "labels": {
+        "zh-TW": "擺動",
+        "en": "Pendulum",
+        "ja": "揺れ"
+      }
+    },
+    {
+      "key": "pendulumRange",
+      "label": "摆动幅度",
+      "type": "number",
+      "default": 0.15,
+      "labels": {
+        "zh-TW": "擺動幅度",
+        "en": "Pendulum range",
+        "ja": "揺れ幅"
+      }
+    },
+    {
+      "key": "average",
+      "label": "平滑系数",
+      "type": "number",
+      "default": 0.2,
+      "labels": {
+        "zh-TW": "平滑係數",
+        "en": "Averaging",
+        "ja": "平滑化"
+      }
+    },
+    {
+      "key": "rootWeight",
+      "label": "根节点权重",
+      "type": "number",
+      "default": 0.5,
+      "labels": {
+        "zh-TW": "根節點權重",
+        "en": "Root weight",
+        "ja": "ルートの重み"
+      }
+    },
+    {
+      "key": "useArmCorrection",
+      "label": "手臂修正",
+      "type": "boolean",
+      "default": true,
+      "labels": {
+        "zh-TW": "手臂修正",
+        "en": "Arm correction",
+        "ja": "腕の補正"
+      }
+    },
+    {
+      "key": "useScale",
+      "label": "启用缩放",
+      "type": "boolean",
+      "default": false,
+      "labels": {
+        "zh-TW": "啟用縮放",
+        "en": "Enable scaling",
+        "ja": "スケール有効"
+      }
+    },
+    {
+      "key": "scale",
+      "label": "缩放倍率",
+      "type": "number",
+      "default": 1,
+      "min": 0.001,
+      "labels": {
+        "zh-TW": "縮放倍率",
+        "en": "Scale",
+        "ja": "倍率"
+      }
+    },
+    {
+      "key": "useLimit",
+      "label": "启用轴限位",
+      "type": "boolean",
+      "default": true,
+      "labels": {
+        "zh-TW": "啟用軸限位",
+        "en": "Enable axis limits",
+        "ja": "軸制限を有効化"
+      }
+    },
+    {
+      "key": "axisX",
+      "label": "X 轴限位（正 / 负）",
+      "type": "number-array",
+      "default": [
+        1,
+        1
+      ],
+      "labels": {
+        "zh-TW": "X 軸限位（正 / 負）",
+        "en": "X limits (+ / −)",
+        "ja": "X 軸制限（正 / 負）"
+      },
+      "elementLabels": [
+        "+",
+        "−"
+      ]
+    },
+    {
+      "key": "axisY",
+      "label": "Y 轴限位（正 / 负）",
+      "type": "number-array",
+      "default": [
+        1,
+        1
+      ],
+      "labels": {
+        "zh-TW": "Y 軸限位（正 / 負）",
+        "en": "Y limits (+ / −)",
+        "ja": "Y 軸制限（正 / 負）"
+      },
+      "elementLabels": [
+        "+",
+        "−"
+      ]
+    },
+    {
+      "key": "axisZ",
+      "label": "Z 轴限位（正 / 负）",
+      "type": "number-array",
+      "default": [
+        1,
+        1
+      ],
+      "labels": {
+        "zh-TW": "Z 軸限位（正 / 負）",
+        "en": "Z limits (+ / −)",
+        "ja": "Z 軸制限（正 / 負）"
+      },
+      "elementLabels": [
+        "+",
+        "−"
+      ]
+    }
+  ],
+  "names": {
+    "zh-TW": "物理參數",
+    "en": "Physics settings",
+    "ja": "物理設定"
+  },
+  "presets": [
+    {
+      "name": "Default",
+      "values": {
+        "damping": 0.33,
+        "stiffness": 0.08,
+        "spring": 1,
+        "pendulum": 0.055,
+        "pendulumRange": 0.15,
+        "average": 0.2,
+        "rootWeight": 0.5,
+        "axisX": [
+          1,
+          1
+        ],
+        "axisY": [
+          1,
+          1
+        ],
+        "axisZ": [
+          1,
+          1
+        ],
+        "useLimit": true,
+        "useArmCorrection": true
+      }
+    },
+    {
+      "name": "0",
+      "values": {
+        "damping": 0.33,
+        "stiffness": 0.07,
+        "spring": 0.7,
+        "pendulum": 0.06,
+        "pendulumRange": 0.25,
+        "average": 0.2,
+        "rootWeight": 0.5,
+        "axisX": [
+          1,
+          1
+        ],
+        "axisY": [
+          1,
+          1
+        ],
+        "axisZ": [
+          1,
+          1
+        ],
+        "useLimit": true,
+        "useArmCorrection": true
+      }
+    },
+    {
+      "name": "1",
+      "values": {
+        "damping": 0.365,
+        "stiffness": 0.06,
+        "spring": 0.62,
+        "pendulum": 0.07,
+        "pendulumRange": 0.25,
+        "average": 0.2,
+        "rootWeight": 0.5,
+        "axisX": [
+          1.5,
+          1.5
+        ],
+        "axisY": [
+          1.5,
+          1.5
+        ],
+        "axisZ": [
+          1.5,
+          1.5
+        ],
+        "useLimit": true,
+        "useArmCorrection": true
+      }
+    },
+    {
+      "name": "2",
+      "values": {
+        "damping": 0.4,
+        "stiffness": 0.065,
+        "spring": 0.55,
+        "pendulum": 0.075,
+        "pendulumRange": 0.25,
+        "average": 0.2,
+        "rootWeight": 0.5,
+        "axisX": [
+          2,
+          2
+        ],
+        "axisY": [
+          2,
+          2
+        ],
+        "axisZ": [
+          2,
+          2
+        ],
+        "useLimit": true,
+        "useArmCorrection": true
+      }
+    },
+    {
+      "name": "3",
+      "values": {
+        "damping": 0.4,
+        "stiffness": 0.065,
+        "spring": 0.55,
+        "pendulum": 0.075,
+        "pendulumRange": 0.25,
+        "average": 0.2,
+        "rootWeight": 0.5,
+        "axisX": [
+          4,
+          4
+        ],
+        "axisY": [
+          4,
+          4
+        ],
+        "axisZ": [
+          4,
+          3
+        ],
+        "useLimit": true,
+        "useArmCorrection": true
+      }
+    },
+    {
+      "name": "4",
+      "values": {
+        "damping": 0.4,
+        "stiffness": 0.06,
+        "spring": 0.4,
+        "pendulum": 0.075,
+        "pendulumRange": 0.55,
+        "average": 0.2,
+        "rootWeight": 0.8,
+        "axisX": [
+          6,
+          6
+        ],
+        "axisY": [
+          6,
+          6
+        ],
+        "axisZ": [
+          6,
+          3.5
+        ],
+        "useLimit": true,
+        "useArmCorrection": true
+      }
+    },
+    {
+      "name": "5",
+      "values": {
+        "damping": 0.33,
+        "stiffness": 0.08,
+        "spring": 0.8,
+        "pendulum": 0.12,
+        "pendulumRange": 0.55,
+        "average": 0.2,
+        "rootWeight": 1,
+        "axisX": [
+          1,
+          1
+        ],
+        "axisY": [
+          1,
+          1
+        ],
+        "axisZ": [
+          1,
+          1
+        ],
+        "useLimit": false,
+        "useArmCorrection": true
+      }
+    }
+  ],
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

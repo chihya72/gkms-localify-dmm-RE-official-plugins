@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <Compile Include="..\..\Tools\Resources\ArchiveUpdate.cs;..\..\Tools\Resources\PackInstaller.cs;..\..\Tools\Resources\AutoResourceUpdate.cs" />
+  </ItemGroup>
+  <Import Project="..\Plugin.targets" />
+</Project>

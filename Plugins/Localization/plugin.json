@@ -1,0 +1,59 @@
+{
+  "id": "localization",
+  "punchline": "统一翻译界面、剧情、主数据、字幕与歌词。",
+  "category": "汉化资源",
+  "tags": ["汉化", "翻译", "文本", "字幕", "localization"],
+  "name": "文本翻译",
+  "apiVersion": 2,
+  "assembly": "Gkms.Localization.dll",
+  "entryPoint": "Gkms.Plugins.Localization.Plugin",
+  "resourceUpdater": "Gkms.Plugins.Localization.ResourceUpdater",
+  "author": "Gakumas Localify contributors",
+  "version": "1.1.2",
+  "requiresRestart": true,
+  "description": "翻译界面、剧情、主数据和主页字幕。开关、参数及启动时加载的词典下次启动游戏生效；剧情文件按原 DMM 在每次请求时读取，更新后可在后续请求中生效。补全字体由框架启动时固定启用。",
+  "settings": [
+    {
+      "key": "textTest",
+      "label": "翻译诊断标记",
+      "type": "boolean",
+      "default": false,
+      "labels": {
+        "zh-TW": "翻譯診斷標記",
+        "en": "Translation markers",
+        "ja": "翻訳診断表示"
+      }
+    },
+    {
+      "key": "autoCheckUpdates",
+      "section": "resources",
+      "label": "启动时检查更新",
+      "type": "boolean",
+      "default": false,
+      "labels": {
+        "zh-TW": "啟動時檢查更新",
+        "en": "Check updates on load",
+        "ja": "起動時に更新確認"
+      }
+    },
+    {
+      "key": "updateSource",
+      "section": "resources",
+      "label": "默认更新源",
+      "type": "string",
+      "default": "",
+      "labels": {
+        "zh-TW": "預設更新來源",
+        "en": "Default update source",
+        "ja": "既定の更新元"
+      }
+    }
+  ],
+  "names": {
+    "zh-TW": "文字翻譯",
+    "en": "Text translation",
+    "ja": "テキスト翻訳"
+  },
+  "canReloadResources": false,
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

@@ -1,0 +1,18 @@
+<Project>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)SettingsUi.cs" />
+    <PackageReference Include="Gkms.Sdk" Version="[2.0.0]" ExcludeAssets="runtime" />
+  </ItemGroup>
+  <Target Name="StagePlugin" AfterTargets="Build">
+    <ItemGroup>
+      <PluginPayload Include="$(TargetDir)**\*" Exclude="$(TargetDir)Gkms.Sdk.*;$(TargetDir)ImGui.NET.*;$(TargetDir)**\cimgui.*;$(TargetDir)**\libcimgui.*;$(TargetDir)**\*.pdb" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PluginPayload)"
+          DestinationFiles="@(PluginPayload->'$(StageRoot)\gakumas-local\re\plugins\$(MSBuildProjectName)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\plugin.json"
+          DestinationFolder="$(StageRoot)\gakumas-local\re\plugins\$(MSBuildProjectName)" />
+    <MakeDir Directories="$(StageRoot)\plugin-packages" />
+    <ZipDirectory SourceDirectory="$(StageRoot)\gakumas-local\re\plugins\$(MSBuildProjectName)"
+                  DestinationFile="$(StageRoot)\plugin-packages\$(MSBuildProjectName).zip" Overwrite="true" />
+  </Target>
+</Project>

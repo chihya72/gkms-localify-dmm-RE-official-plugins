@@ -1,0 +1,27 @@
+{
+  "id": "capture",
+  "punchline": "为翻译制作采集原文和界面贴图。",
+  "category": "开发工具",
+  "tags": ["采集", "文本", "贴图", "dump"],
+  "name": "文本与贴图采集",
+  "apiVersion": 2,
+  "assembly": "Gkms.Capture.dll",
+  "entryPoint": "Gkms.Plugins.Capture.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.2",
+  "description": "独立选择原文与贴图采集，输出到插件自身 output 目录，保留已有译文并过滤重复内容。",
+  "settings": [
+    { "key": "text", "label": "采集原文", "type": "boolean", "default": true,
+      "labels": { "zh-TW": "擷取原文", "en": "Capture text", "ja": "原文収集" } },
+    { "key": "textures", "label": "采集贴图", "type": "boolean", "default": true,
+      "labels": { "zh-TW": "擷取貼圖", "en": "Capture textures", "ja": "画像収集" } },
+    { "key": "fileIndex", "label": "词典采集分组", "type": "integer", "default": 0,
+      "labels": { "zh-TW": "詞典擷取分組", "en": "Dictionary group", "ja": "辞書グループ" } }
+  ],
+  "names": {
+    "zh-TW": "文字與貼圖擷取",
+    "en": "Text and texture capture",
+    "ja": "テキスト・画像収集"
+  },
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

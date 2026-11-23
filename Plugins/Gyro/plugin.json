@@ -1,0 +1,55 @@
+{
+  "id": "gyro",
+  "punchline": "用鼠标和小键盘控制全景及摄影视角。",
+  "category": "摄影与镜头",
+  "tags": ["陀螺仪", "全景", "摄影", "gyro"],
+  "name": "陀螺仪模拟",
+  "apiVersion": 2,
+  "assembly": "Gkms.Gyro.dll",
+  "entryPoint": "Gkms.Plugins.Gyro.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.2",
+  "description": "使用鼠标和小键盘模拟全景及摄影界面的陀螺仪操作。",
+  "settings": [
+    {
+      "key": "sensitivity",
+      "label": "灵敏度",
+      "type": "number",
+      "default": 1,
+      "min": 0.001,
+      "labels": {
+        "zh-TW": "靈敏度",
+        "en": "Sensitivity",
+        "ja": "感度"
+      }
+    },
+    {
+      "key": "invertX",
+      "label": "反转 X",
+      "type": "boolean",
+      "default": false,
+      "labels": {
+        "zh-TW": "反轉 X",
+        "en": "Invert X",
+        "ja": "X 軸反転"
+      }
+    },
+    {
+      "key": "invertY",
+      "label": "反转 Y",
+      "type": "boolean",
+      "default": false,
+      "labels": {
+        "zh-TW": "反轉 Y",
+        "en": "Invert Y",
+        "ja": "Y 軸反転"
+      }
+    }
+  ],
+  "names": {
+    "zh-TW": "陀螺儀模擬",
+    "en": "Gyroscope emulation",
+    "ja": "ジャイロ操作"
+  },
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

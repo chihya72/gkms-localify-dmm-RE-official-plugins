@@ -1,0 +1,184 @@
+{
+  "id": "camera",
+  "punchline": "自由、跟随和第一人称三种镜头控制。",
+  "category": "摄影与镜头",
+  "tags": ["镜头", "摄影", "camera", "FOV"],
+  "name": "镜头控制",
+  "apiVersion": 2,
+  "assembly": "Gkms.Camera.dll",
+  "entryPoint": "Gkms.Plugins.Camera.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.2",
+  "description": "自由镜头、角色跟随与第一人称控制，支持移动、视野与角色偏移。",
+  "settings": [
+    {
+      "key": "mode",
+      "label": "镜头模式",
+      "type": "string",
+      "default": "free",
+      "labels": {
+        "zh-TW": "鏡頭模式",
+        "en": "Mode",
+        "ja": "モード"
+      },
+      "choices": [
+        "free",
+        "follow",
+        "first-person"
+      ]
+    },
+    {
+      "key": "speed",
+      "label": "移动速度",
+      "type": "number",
+      "default": 1,
+      "min": 0.001,
+      "labels": {
+        "zh-TW": "移動速度",
+        "en": "Move speed",
+        "ja": "移動速度"
+      }
+    },
+    {
+      "key": "sensitivity",
+      "label": "灵敏度",
+      "type": "number",
+      "default": 1,
+      "min": 0.001,
+      "labels": {
+        "zh-TW": "靈敏度",
+        "en": "Sensitivity",
+        "ja": "感度"
+      }
+    },
+    {
+      "key": "actorIndex",
+      "label": "角色序号",
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "labels": {
+        "zh-TW": "角色序號",
+        "en": "Actor index",
+        "ja": "キャラクター番号"
+      }
+    },
+    {
+      "key": "hideHead",
+      "label": "跟随及第一人称隐藏头部",
+      "type": "boolean",
+      "default": true,
+      "labels": {
+        "zh-TW": "跟隨及第一人稱隱藏頭部",
+        "en": "Hide head while tracking",
+        "ja": "追従・一人称で頭部を非表示"
+      }
+    },
+    {
+      "key": "lockRoll",
+      "label": "锁定第一人称滚转",
+      "type": "boolean",
+      "default": false,
+      "labels": {
+        "zh-TW": "鎖定第一人稱滾轉",
+        "en": "Lock first-person roll",
+        "ja": "一人称のロール固定"
+      }
+    },
+    {
+      "key": "smoothFollow",
+      "label": "平滑跟随高度",
+      "type": "boolean",
+      "default": true,
+      "labels": {
+        "zh-TW": "平滑跟隨高度",
+        "en": "Smooth follow height",
+        "ja": "追従高さの平滑化"
+      }
+    },
+    {
+      "key": "followOffset",
+      "label": "跟随位置 X / Y / Z",
+      "type": "number-array",
+      "default": [
+        0,
+        0,
+        1.5
+      ],
+      "labels": {
+        "zh-TW": "跟隨位置 X / Y / Z",
+        "en": "Follow offset X / Y / Z",
+        "ja": "追従位置 X / Y / Z"
+      },
+      "elementLabels": [
+        "X",
+        "Y",
+        "Z"
+      ]
+    },
+    {
+      "key": "firstPersonOffset",
+      "label": "第一人称位置 X / Y / Z",
+      "type": "number-array",
+      "default": [
+        0,
+        0.064,
+        0
+      ],
+      "labels": {
+        "zh-TW": "第一人稱位置 X / Y / Z",
+        "en": "First-person offset X / Y / Z",
+        "ja": "一人称位置 X / Y / Z"
+      },
+      "elementLabels": [
+        "X",
+        "Y",
+        "Z"
+      ]
+    },
+    {
+      "key": "lookOffset",
+      "label": "注视点偏移 X / Y",
+      "type": "number-array",
+      "default": [
+        0,
+        0
+      ],
+      "labels": {
+        "zh-TW": "注視點偏移 X / Y",
+        "en": "Look offset X / Y",
+        "ja": "注視点 X / Y"
+      },
+      "elementLabels": [
+        "X",
+        "Y"
+      ]
+    },
+    {
+      "key": "offset",
+      "label": "旧版位置偏移（兼容）",
+      "type": "number-array",
+      "default": [
+        0,
+        0,
+        1.5
+      ],
+      "labels": {
+        "zh-TW": "offset",
+        "en": "offset",
+        "ja": "offset"
+      },
+      "elementLabels": [
+        "X",
+        "Y",
+        "Z"
+      ]
+    }
+  ],
+  "names": {
+    "zh-TW": "鏡頭控制",
+    "en": "Camera controls",
+    "ja": "カメラ操作"
+  },
+  "settingsUi": "Gkms.Plugins.SettingsUi"
+}

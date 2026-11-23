@@ -1,0 +1,19 @@
+{
+  "id": "schedule-sp",
+  "punchline": "保留培育日程中的 SP 课程标记。",
+  "category": "游戏辅助",
+  "tags": ["SP", "日程", "培育"],
+  "name": "SP 日程标记",
+  "apiVersion": 2,
+  "assembly": "Gkms.ScheduleSp.dll",
+  "entryPoint": "Gkms.Plugins.ScheduleSp.Plugin",
+  "author": "Gakumas Localify contributors",
+  "version": "1.0.0",
+  "description": "在培育日程中保留 SP 课程标记。",
+  "settings": [],
+  "names": {
+    "zh-TW": "SP 日程標記",
+    "en": "SP schedule markers",
+    "ja": "SP スケジュール表示"
+  }
+}
