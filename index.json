@@ -1,0 +1,381 @@
+{
+  "schemaVersion": 1,
+  "name": "Gakumas Localify RE 官方插件",
+  "plugins": [
+    {
+      "id": "auto-photo",
+      "name": "自动拍照",
+      "version": "1.0.0",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "配置 Live 自动摄影的三个张数档位。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.AutoPhoto-1.0.0.zip",
+      "assembly": "Gkms.AutoPhoto.dll",
+      "punchline": "按需要调整 Live 自动摄影的张数。",
+      "category": "摄影与镜头",
+      "tags": [
+        "摄影",
+        "Live",
+        "photo"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "自動拍照",
+        "en": "Auto photography",
+        "ja": "自動撮影"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "camera",
+      "name": "镜头控制",
+      "version": "1.0.2",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "自由镜头、角色跟随与第一人称控制，支持移动、视野与角色偏移。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.Camera-1.0.2.zip",
+      "assembly": "Gkms.Camera.dll",
+      "punchline": "自由、跟随和第一人称三种镜头控制。",
+      "category": "摄影与镜头",
+      "tags": [
+        "镜头",
+        "摄影",
+        "camera",
+        "FOV"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "鏡頭控制",
+        "en": "Camera controls",
+        "ja": "カメラ操作"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "capture",
+      "name": "文本与贴图采集",
+      "version": "1.0.2",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "独立选择原文与贴图采集，输出到插件自身 output 目录，保留已有译文并过滤重复内容。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.Capture-1.0.2.zip",
+      "assembly": "Gkms.Capture.dll",
+      "punchline": "为翻译制作采集原文和界面贴图。",
+      "category": "开发工具",
+      "tags": [
+        "采集",
+        "文本",
+        "贴图",
+        "dump"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "文字與貼圖擷取",
+        "en": "Text and texture capture",
+        "ja": "テキスト・画像収集"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "card-cut-in",
+      "name": "卡牌演出",
+      "version": "1.0.1",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "沿用原版 DMM 行为：未手动指定皮肤时，从主表选择最高等级的卡牌演出，不要求持有该皮肤。该皮肤 ID 也会被游戏的考试记录读取。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.CardCutIn-1.0.1.zip",
+      "assembly": "Gkms.CardCutIn.dll",
+      "punchline": "未手动指定皮肤时选用最高等级卡牌演出。",
+      "category": "游戏辅助",
+      "tags": [
+        "卡牌",
+        "演出",
+        "cut-in"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "卡牌演出",
+        "en": "Card cut-in",
+        "ja": "カード演出"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": false,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "frame-rate",
+      "name": "帧率设置",
+      "version": "1.0.1",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "设置游戏与 Unity 的目标帧率；热启用立即应用，停用恢复游戏原先请求的帧率。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.FrameRate-1.0.1.zip",
+      "assembly": "Gkms.FrameRate.dll",
+      "punchline": "自定义游戏和 Unity 的目标帧率。",
+      "category": "画面与窗口",
+      "tags": [
+        "帧率",
+        "FPS",
+        "性能"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "影格率設定",
+        "en": "Frame rate",
+        "ja": "フレームレート"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "graphics",
+      "name": "画质设置",
+      "version": "1.0.1",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "调整游戏画质、渲染倍率、反射、后处理和细节质量；启用与配置重载立即应用当前画面，停用恢复游戏原设置。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.Graphics-1.0.1.zip",
+      "assembly": "Gkms.Graphics.dll",
+      "punchline": "调整渲染比例、反射和画面细节。",
+      "category": "画面与窗口",
+      "tags": [
+        "画质",
+        "渲染",
+        "graphics",
+        "LOD"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "畫質設定",
+        "en": "Graphics",
+        "ja": "画質設定"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "gyro",
+      "name": "陀螺仪模拟",
+      "version": "1.0.2",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "使用鼠标和小键盘模拟全景及摄影界面的陀螺仪操作。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.Gyro-1.0.2.zip",
+      "assembly": "Gkms.Gyro.dll",
+      "punchline": "用鼠标和小键盘控制全景及摄影视角。",
+      "category": "摄影与镜头",
+      "tags": [
+        "陀螺仪",
+        "全景",
+        "摄影",
+        "gyro"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "陀螺儀模擬",
+        "en": "Gyroscope emulation",
+        "ja": "ジャイロ操作"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "live-unlock",
+      "name": "Live、服装与头饰解锁",
+      "version": "1.0.1",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "管理 Live、服装与头饰解锁；可独立选择 Live 与服装子功能，名片页面保留真实持有判断。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.LiveUnlock-1.0.1.zip",
+      "assembly": "Gkms.LiveUnlock.dll",
+      "punchline": "分别控制 Live 与服装、头饰的可选范围。",
+      "category": "游戏辅助",
+      "tags": [
+        "Live",
+        "服装",
+        "头饰",
+        "解锁"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "Live、服裝與頭飾解鎖",
+        "en": "Live, costume and head unlock",
+        "ja": "ライブ・衣装・頭部解放"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "localization",
+      "name": "文本翻译",
+      "version": "1.1.2",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "翻译界面、剧情、主数据和主页字幕。开关、参数及启动时加载的词典下次启动游戏生效；剧情文件按原 DMM 在每次请求时读取，更新后可在后续请求中生效。补全字体由框架启动时固定启用。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.Localization-1.1.2.zip",
+      "assembly": "Gkms.Localization.dll",
+      "punchline": "统一翻译界面、剧情、主数据、字幕与歌词。",
+      "category": "汉化资源",
+      "tags": [
+        "汉化",
+        "翻译",
+        "文本",
+        "字幕",
+        "localization"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "文字翻譯",
+        "en": "Text translation",
+        "ja": "テキスト翻訳"
+      },
+      "requiresRestart": true,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": true
+    },
+    {
+      "id": "physics",
+      "name": "物理参数",
+      "version": "1.0.1",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "调整角色骨骼物理、缩放及轴限位；启用与配置重载立即更新场景内角色，停用恢复原参数。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.Physics-1.0.1.zip",
+      "assembly": "Gkms.Physics.dll",
+      "punchline": "调节角色骨骼物理、缩放和轴向限位。",
+      "category": "画面与窗口",
+      "tags": [
+        "物理",
+        "骨骼",
+        "physics"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "物理參數",
+        "en": "Physics settings",
+        "ja": "物理設定"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "ios-login",
+      "name": "iOS 登录（含充值拦截）",
+      "version": "1.0.4",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "完成 DMM 登录后使用 iOS 请求平台并拦截充值。支持运行中启用和关闭；切换后自动刷新对应平台的宝石余额。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.PurchaseGuard-1.0.4.zip",
+      "assembly": "Gkms.PurchaseGuard.dll",
+      "punchline": "DMM 认证后使用 iOS 请求平台，并拦截充值。",
+      "category": "游戏辅助",
+      "tags": [
+        "iOS",
+        "登录",
+        "宝石",
+        "充值拦截"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "iOS 登入（含儲值攔截）",
+        "en": "iOS login + purchase guard",
+        "ja": "iOS ログイン・購入保護"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": false,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "schedule-sp",
+      "name": "SP 日程标记",
+      "version": "1.0.0",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "在培育日程中保留 SP 课程标记。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.ScheduleSp-1.0.0.zip",
+      "assembly": "Gkms.ScheduleSp.dll",
+      "punchline": "保留培育日程中的 SP 课程标记。",
+      "category": "游戏辅助",
+      "tags": [
+        "SP",
+        "日程",
+        "培育"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "SP 日程標記",
+        "en": "SP schedule markers",
+        "ja": "SP スケジュール表示"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": false,
+      "hasResourceUpdater": false
+    },
+    {
+      "id": "textures",
+      "name": "贴图翻译",
+      "version": "1.0.1",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "读取本地汉化贴图，替换对应界面图片，支持资源更新与重载。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.Textures-1.0.1.zip",
+      "assembly": "Gkms.Textures.dll",
+      "punchline": "用独立汉化贴图包替换游戏界面图片。",
+      "category": "汉化资源",
+      "tags": [
+        "汉化",
+        "贴图",
+        "图片",
+        "textures"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "貼圖翻譯",
+        "en": "Texture translation",
+        "ja": "テクスチャ翻訳"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": true
+    },
+    {
+      "id": "window",
+      "name": "窗口设置",
+      "version": "1.0.2",
+      "apiVersion": 2,
+      "author": "Gakumas Localify contributors",
+      "description": "管理窗口方向、缩放和自由调整窗口尺寸。",
+      "downloadUrl": "https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins/903fe2d31893f97c8789f5b8e16e55ef99d12f0a/packages/Gkms.Window-1.0.2.zip",
+      "assembly": "Gkms.Window.dll",
+      "punchline": "自由调整窗口尺寸、横竖屏与无边框全屏。",
+      "category": "画面与窗口",
+      "tags": [
+        "窗口",
+        "横屏",
+        "竖屏",
+        "全屏",
+        "window"
+      ],
+      "repositoryUrl": null,
+      "names": {
+        "zh-TW": "視窗設定",
+        "en": "Window",
+        "ja": "ウィンドウ設定"
+      },
+      "requiresRestart": false,
+      "hasSettingsUi": true,
+      "hasResourceUpdater": false
+    }
+  ]
+}
