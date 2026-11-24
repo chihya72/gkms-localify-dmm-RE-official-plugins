@@ -3,12 +3,12 @@
   "punchline": "调节角色骨骼物理、缩放和轴向限位。",
   "category": "画面与窗口",
   "tags": ["物理", "骨骼", "physics"],
-  "name": "物理参数",
+  "name": "物理参数调节",
   "apiVersion": 2,
   "assembly": "Gkms.Physics.dll",
   "entryPoint": "Gkms.Plugins.Physics.Plugin",
   "author": "Gakumas Localify contributors",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "调整角色骨骼物理、缩放及轴限位；启用与配置重载立即更新场景内角色，停用恢复原参数。",
   "settings": [
     {
@@ -189,7 +189,7 @@
     }
   ],
   "names": {
-    "zh-TW": "物理參數",
+    "zh-TW": "物理參數調節",
     "en": "Physics settings",
     "ja": "物理設定"
   },

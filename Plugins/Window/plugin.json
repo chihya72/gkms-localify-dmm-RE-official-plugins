@@ -1,23 +1,23 @@
 {
   "id": "window",
-  "punchline": "自由调整窗口尺寸、横竖屏与无边框全屏。",
+  "punchline": "调节窗口尺寸和旋转方式，F11 强制当前屏幕全屏。",
   "category": "画面与窗口",
   "tags": ["窗口", "横屏", "竖屏", "全屏", "window"],
-  "name": "窗口设置",
+  "name": "窗口尺寸调节",
   "apiVersion": 2,
   "assembly": "Gkms.Window.dll",
   "entryPoint": "Gkms.Plugins.Window.Plugin",
   "author": "Gakumas Localify contributors",
-  "version": "1.0.2",
-  "description": "管理窗口方向、缩放和自由调整窗口尺寸。",
+  "version": "1.0.3",
+  "description": "支持自动旋转、强制竖屏、强制横屏及自由调整窗口大小。按 F11 强制在游戏窗口所在屏幕无边框全屏，再按一次恢复原位置和尺寸；全屏不受旋转方式或自由调整大小开关限制。",
   "settings": [
     {
       "key": "orientation",
-      "label": "方向",
+      "label": "旋转方式",
       "type": "string",
       "default": "game",
       "labels": {
-        "zh-TW": "方向",
+        "zh-TW": "旋轉方式",
         "en": "Orientation",
         "ja": "画面の向き"
       },
@@ -40,9 +40,9 @@
     }
   ],
   "names": {
-    "zh-TW": "視窗設定",
-    "en": "Window",
-    "ja": "ウィンドウ設定"
+    "zh-TW": "視窗尺寸調節",
+    "en": "Window size controls",
+    "ja": "ウィンドウサイズ調整"
   },
-  "settingsUi": "Gkms.Plugins.SettingsUi"
+  "settingsUi": "Gkms.Plugins.Window.WindowSettingsUi"
 }

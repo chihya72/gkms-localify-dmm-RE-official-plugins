@@ -1,19 +1,19 @@
 {
   "id": "card-cut-in",
-  "punchline": "未手动指定皮肤时选用最高等级卡牌演出。",
+  "punchline": "无需持有，自动选用最高等级的技能卡皮肤演出。",
   "category": "游戏辅助",
   "tags": ["卡牌", "演出", "cut-in"],
-  "name": "卡牌演出",
+  "name": "解锁技能卡皮肤",
   "apiVersion": 2,
   "assembly": "Gkms.CardCutIn.dll",
   "entryPoint": "Gkms.Plugins.CardCutIn.Plugin",
   "author": "Gakumas Localify contributors",
-  "version": "1.0.1",
-  "description": "沿用原版 DMM 行为：未手动指定皮肤时，从主表选择最高等级的卡牌演出，不要求持有该皮肤。该皮肤 ID 也会被游戏的考试记录读取。",
+  "version": "1.0.2",
+  "description": "未手动指定技能卡皮肤时，自动选择最高等级的皮肤演出，无需持有该皮肤；已手动指定的皮肤保持不变。该皮肤 ID 也会被游戏的考试记录读取。",
   "settings": [],
   "names": {
-    "zh-TW": "卡牌演出",
-    "en": "Card cut-in",
-    "ja": "カード演出"
+    "zh-TW": "解鎖技能卡皮膚",
+    "en": "Unlock skill card skins",
+    "ja": "スキルカードスキン解放"
   }
 }

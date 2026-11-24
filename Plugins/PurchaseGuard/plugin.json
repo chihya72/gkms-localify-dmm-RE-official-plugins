@@ -1,19 +1,19 @@
 {
   "id": "ios-login",
-  "punchline": "DMM 认证后使用 iOS 请求平台，并拦截充值。",
+  "punchline": "DMM 登录后模拟 iOS 请求平台，自动刷新宝石余额。",
   "category": "游戏辅助",
   "tags": ["iOS", "登录", "宝石", "充值拦截"],
-  "name": "iOS 登录（含充值拦截）",
+  "name": "模拟iOS登录",
   "apiVersion": 2,
   "assembly": "Gkms.PurchaseGuard.dll",
   "entryPoint": "Gkms.Plugins.PurchaseGuard.Plugin",
   "author": "Gakumas Localify contributors",
-  "version": "1.0.4",
-  "description": "完成 DMM 登录后使用 iOS 请求平台并拦截充值。支持运行中启用和关闭；切换后自动刷新对应平台的宝石余额。",
+  "version": "1.0.5",
+  "description": "完成 DMM 登录后，将游戏请求平台切换为 iOS，并拦截充值操作。支持运行中启用和关闭，切换后自动刷新对应平台的宝石余额。",
   "settings": [],
   "names": {
-    "zh-TW": "iOS 登入（含儲值攔截）",
-    "en": "iOS login + purchase guard",
-    "ja": "iOS ログイン・購入保護"
+    "zh-TW": "模擬iOS登入",
+    "en": "Simulate iOS login",
+    "ja": "iOS ログインのシミュレーション"
   }
 }

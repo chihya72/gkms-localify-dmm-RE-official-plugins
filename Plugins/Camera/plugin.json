@@ -1,5 +1,5 @@
 {
-  "id": "camera",
+  "id": "camera-control",
   "punchline": "自由、跟随和第一人称三种镜头控制。",
   "category": "摄影与镜头",
   "tags": ["镜头", "摄影", "camera", "FOV"],
@@ -8,7 +8,7 @@
   "assembly": "Gkms.Camera.dll",
   "entryPoint": "Gkms.Plugins.Camera.Plugin",
   "author": "Gakumas Localify contributors",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "自由镜头、角色跟随与第一人称控制，支持移动、视野与角色偏移。",
   "settings": [
     {
