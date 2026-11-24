@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Reflection;
-using System.Text.RegularExpressions;
+using System.Text;
 using Gkms.Sdk;
 
 namespace Gkms.Plugins.Capture;
@@ -11,9 +11,8 @@ internal sealed class TextCapture : ILocalifyPlugin, IPluginDiagnostics
     public IReadOnlyList<string> Warnings => warnings.ToArray();
     private static readonly object sync = new();
     private static readonly HashSet<(string, string)> seen = new();
-    private static StreamWriter? writer;
+    private static bool active;
     private static IPluginContext? session;
-    private static bool failed;
     private static string root = "";
     private static int fileIndex;
     private static MethodInfo? key;
@@ -27,9 +26,7 @@ internal sealed class TextCapture : ILocalifyPlugin, IPluginDiagnostics
         root = Directory.CreateDirectory(Path.Combine(context.Services().PackageDirectory, "output")).FullName;
         context.Log("采集输出目录: " + root);
         fileIndex = context.Option("fileIndex", 0);
-        writer = File.AppendText(Path.Combine(root, "observed.jsonl"));
-        writer.AutoFlush = true;
-        failed = false;
+        active = true;
         session = context;
         context.Patch(context.Require("quaunity-ui.Runtime", "Qua.UI.I18n", "SetValue", "System.String", "System.String"),
             GameMethods.Handler<TextCapture>(nameof(KeyValue)), priority: 800);
@@ -85,14 +82,17 @@ internal sealed class TextCapture : ILocalifyPlugin, IPluginDiagnostics
     { if (Interop.TypeOf(__instance).GetProperty("text")?.GetValue(__instance) is string text) Text(text); }
     public static void ChangeFile()
     {
-        if (dictionaryRoot != null && dictionaryRevision != LiveGameState.TextResourcesRevision)
+        lock (sync)
         {
-            try { dictionary = new DmmTextDictionary(dictionaryRoot); dictionaryRevision = LiveGameState.TextResourcesRevision; seen.Clear(); }
-            catch (Exception error) { session?.Log("采集词典重载失败: " + error.GetBaseException().Message); }
+            if (dictionaryRoot != null && dictionaryRevision != LiveGameState.TextResourcesRevision)
+            {
+                try { dictionary = new DmmTextDictionary(dictionaryRoot); dictionaryRevision = LiveGameState.TextResourcesRevision; seen.Clear(); }
+                catch (Exception error) { session?.Log("采集词典重载失败: " + error.GetBaseException().Message); }
+            }
+            var delta = (key?.Invoke(null, new object[] { "[+]" }) is true ? 1 : 0) - (key?.Invoke(null, new object[] { "[-]" }) is true ? 1 : 0);
+            if (delta == 0) return;
+            Flush(); fileIndex += delta; seen.RemoveWhere(p => p.Item1 == "text"); session?.Log($"原文采集分组: {fileIndex}");
         }
-        var delta = (key?.Invoke(null, new object[] { "[+]" }) is true ? 1 : 0) - (key?.Invoke(null, new object[] { "[-]" }) is true ? 1 : 0);
-        if (delta == 0) return;
-        lock (sync) { Flush(); fileIndex += delta; seen.RemoveWhere(p => p.Item1 == "text"); session?.Log($"原文采集分组: {fileIndex}"); }
     }
     private static void Add(string file, string key, string value)
     {
@@ -105,26 +105,50 @@ internal sealed class TextCapture : ILocalifyPlugin, IPluginDiagnostics
         if (string.IsNullOrEmpty(key)) return;
         lock (sync)
         {
-            if (failed || writer == null || !seen.Add((kind, key))) return;
-            try
+            if (!active || !seen.Add((kind, key))) return;
+            if (kind == "i18n") { if (dictionary?.HasKey(key) != true) Add("localization.json", key, value); return; }
+            foreach (var (file, text) in dictionary!.Missing(value))
             {
-                writer.WriteLine(JsonSerializer.Serialize(new { kind, key, value }));
-                if (kind == "i18n") { if (dictionary?.HasKey(key) != true) Add("localization.json", key, value); return; }
-                foreach (var (file, text) in dictionary!.Missing(value))
-                {
-                    if (file == "orig") Add(FileName("generic_orig"), text, text);
-                    else if (file == "fmt") Add(FileName("generic", ".fmt.json"), text, text);
-                    else Add(FileName("generic"), "[__split__]" + text, "[__split__]" + text);
-                }
+                if (file == "orig") Add(FileName("generic_orig"), text, text);
+                else if (file == "fmt") Add(FileName("generic", ".fmt.json"), text, text);
+                else Add(FileName("generic"), "[__split__]" + text, "[__split__]" + text);
             }
-            catch (IOException error) { failed = true; session?.Log(error.Message); }
+        }
+    }
+    // Local.cpp uses ordered_json::dump(4, ' ', false). Emit literal Unicode,
+    // including supplementary characters, while escaping JSON syntax and controls.
+    private static string SerializeDictionary(Dictionary<string, string> map)
+    {
+        if (map.Count == 0) return "{}";
+        var output = new StringBuilder("{\n");
+        var first = true;
+        foreach (var (key, value) in map)
+        {
+            if (!first) output.Append(",\n");
+            first = false;
+            output.Append("    "); Quote(key); output.Append(": "); Quote(value);
+        }
+        return output.Append("\n}").ToString();
+
+        void Quote(string value)
+        {
+            output.Append('"');
+            foreach (var rune in value.EnumerateRunes())
+                output.Append(rune.Value switch
+                {
+                    0x22 => "\\\"", 0x5c => "\\\\", 8 => "\\b", 9 => "\\t",
+                    10 => "\\n", 12 => "\\f", 13 => "\\r",
+                    < 0x20 => "\\u" + rune.Value.ToString("x4"),
+                    _ => rune.ToString()
+                });
+            output.Append('"');
         }
     }
     private static void Flush()
     {
         lock (sync)
         {
-            if (failed || writer == null) return;
+            if (!active) return;
             try
             {
                 foreach (var (name, additions) in dictionaries)
@@ -133,7 +157,7 @@ internal sealed class TextCapture : ILocalifyPlugin, IPluginDiagnostics
                     var map = File.Exists(file) ? Interop.ReadDictionary(file) : new Dictionary<string, string>();
                     foreach (var entry in additions) map.TryAdd(entry.Key, entry.Value);
                     var temp = file + ".tmp";
-                    try { File.WriteAllText(temp, JsonSerializer.Serialize(map, new JsonSerializerOptions { WriteIndented = true })); File.Move(temp, file, true); }
+                    try { File.WriteAllText(temp, SerializeDictionary(map), new UTF8Encoding(false)); File.Move(temp, file, true); }
                     finally { if (File.Exists(temp)) File.Delete(temp); }
                 }
                 dictionaries.Clear();
@@ -144,6 +168,6 @@ internal sealed class TextCapture : ILocalifyPlugin, IPluginDiagnostics
     public void Dispose()
     {
         flush?.Dispose(); flush = null;
-        lock (sync) { Flush(); writer?.Dispose(); writer = null; session = null; seen.Clear(); warnings.Clear(); dictionary = null; dictionaryRoot = null; dictionaries.Clear(); key = null; }
+        lock (sync) { Flush(); active = false; session = null; seen.Clear(); warnings.Clear(); dictionary = null; dictionaryRoot = null; dictionaries.Clear(); key = null; }
     }
 }

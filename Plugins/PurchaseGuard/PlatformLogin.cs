@@ -15,10 +15,12 @@ internal sealed class PlatformLogin : IDisposable
     private ConstructorInfo authConstructor = null!;
     private Type requestResultType = null!, balanceResponseType = null!;
     private Type cancellationType = null!;
+    private object backgroundCallOptions = null!;
     private object? cancellation;
     private object? pendingTask, pendingAwaiter;
     private readonly Dictionary<object, bool> responsePlatforms = new();
     private bool authenticated, refreshWanted, inFlight, loggedPlatform;
+    private bool waitingForHomeLogin;
     private bool started, cleanupWanted, cleanupMode;
     private string targetPlatform = "iOS", cleanupPlatform = "", requestToken = "", cleanupToken = "";
     private object? requestApi, requestUser;
@@ -57,6 +59,9 @@ internal sealed class PlatformLogin : IDisposable
         ctx.Patch(apiSuccess, postfix: GameMethods.Handler<PlatformLogin>(nameof(ApiSucceeded)));
         var userApi = ctx.RequireType(game, "Campus.Common.Network.Api+User");
         balanceQuery = userApi.GetMethods(GameMethods.Declared).Single(m => m.Name == "GetBalanceAsync" && m.IsStatic && m.GetParameters().Length == 4);
+        // This is an optional background refresh, not a game navigation request.
+        // In particular, a DateChanged/title response must not abort the game's login.
+        backgroundCallOptions = Interop.New(balanceQuery.GetParameters()[1].ParameterType, true, true, true, true, true)!;
         var resultType = balanceQuery.ReturnType.GetMethod("GetAwaiter", Type.EmptyTypes)?.ReturnType.GetMethod("GetResult", Type.EmptyTypes)?.ReturnType;
         context.Log($"余额接口类型（只读诊断）: task={DescribeType(balanceQuery.ReturnType)}; result={DescribeType(resultType)}");
         requestResultType = resultType ?? throw new MissingMethodException("余额任务缺少 GetAwaiter/GetResult。");
@@ -96,6 +101,7 @@ internal sealed class PlatformLogin : IDisposable
     {
         if (current is not { } self) return;
         self.authenticated = false; self.refreshWanted = false; self.CancelRefresh(); self.Restore(); self.loggedPlatform = false;
+        self.waitingForHomeLogin = false;
         self.balanceRetries = 0;
         self.warning = null;
         self.context.Log("开始 DMM 认证，已恢复原请求平台；充值拦截保持启用。");
@@ -104,7 +110,7 @@ internal sealed class PlatformLogin : IDisposable
     {
         if (current is not { } self) return;
         if (string.IsNullOrEmpty(Interop.Get(__instance, "GameAuthToken")?.ToString())) { BeginLogin(); return; }
-        self.AcceptAuthentication("DMM 认证响应有效；等待游戏保存认证令牌后刷新余额。");
+        self.AcceptAuthentication("DMM 认证响应有效；按原版切换平台，等待 Home:Login 完成后刷新余额。");
     }
     public static void MessageParsed(object? __0)
     {
@@ -120,7 +126,7 @@ internal sealed class PlatformLogin : IDisposable
     }
     private void AcceptAuthentication(string reason)
     {
-        if (!authenticated) { authenticated = true; Schedule(reason); }
+        if (!authenticated) { authenticated = true; waitingForHomeLogin = true; context.Log(reason); }
         foreach (var api in originalPlatforms.Keys.ToArray()) Apply(api);
     }
     public static void IsIos(ref bool __result) { if (current?.authenticated == true) __result = true; }
@@ -163,7 +169,13 @@ internal sealed class PlatformLogin : IDisposable
                 var request = Interop.Call(awaiter, "GetResult");
                 if (request == null || !requestResultType.IsInstanceOfType(request))
                     throw new InvalidDataException("余额请求对象类型不匹配: " + DescribeType(request == null ? null : Interop.TypeOf(request)));
-                if (Interop.Get(request, "IsDone") is not true || Interop.Get(request, "Error") != null)
+                if (Interop.Get(request, "Error") is { } apiError)
+                {
+                    var code = Interop.Get(apiError, "Code")?.ToString();
+                    var diagnostic = int.TryParse(code, out var number) ? $"（错误码 {number}）" : "";
+                    throw new InvalidDataException($"后台余额查询失败{diagnostic}，保留当前显示，不触发游戏返回标题。");
+                }
+                if (Interop.Get(request, "IsDone") is not true)
                     throw new InvalidDataException("余额请求未成功完成，保留当前显示。");
                 var response = Interop.Get(request, "Response");
                 if (response == null || !balanceResponseType.IsInstanceOfType(response))
@@ -204,13 +216,23 @@ internal sealed class PlatformLogin : IDisposable
         var argument = parameter.IsInstanceOfType(token) ? token : Interop.New(parameter, token);
         refreshWanted = false; inFlight = true; deadline = DateTime.UtcNow.AddSeconds(30);
         context.Log($"发送 User/GetBalance，目标平台 {targetPlatform}，重新读取服务器余额（不复用旧响应缓存）。");
-        pendingTask = balanceQuery.Invoke(null, new object?[] { argument, null, null, null }) ?? throw new InvalidOperationException("余额查询未返回任务。");
+        pendingTask = balanceQuery.Invoke(null, new object?[] { argument, backgroundCallOptions, null, null }) ?? throw new InvalidOperationException("余额查询未返回任务。");
         pendingAwaiter = Interop.Call(pendingTask, "GetAwaiter");
     }
     public static void ApiSucceeded(object __instance, object[] __args)
     {
-        if (current is not { authenticated: true, inFlight: true } self || __args.Length != 6 || __args[3] == null ||
-            Interop.TypeOf(__args[3]).FullName != "Campus.Common.Proto.Client.Api.UserGetBalanceResponse") return;
+        if (current is not { authenticated: true } self || __args.Length != 6 || __args[3] == null) return;
+        var responseType = Interop.TypeOf(__args[3]).FullName;
+        // User:Get populates UserBalance before Home:Login performs the daily reset.
+        // The original DMM plugin only changes the platform here; our extra query
+        // must wait for successful Home:Login, not merely an allocated user model.
+        if (!self.cleanupMode && self.waitingForHomeLogin && responseType == "Campus.Common.Proto.Client.Api.HomeLoginResponse")
+        {
+            self.waitingForHomeLogin = false;
+            self.Schedule("Home:Login 已成功，开始后台刷新 iOS 宝石余额。");
+            return;
+        }
+        if (!self.inFlight || responseType != "Campus.Common.Proto.Client.Api.UserGetBalanceResponse") return;
         try
         {
             var key = Interop.Get(__instance, "PlatformHeaderKey")?.ToString();
@@ -283,7 +305,7 @@ internal sealed class PlatformLogin : IDisposable
             Interop.Get(userInstance.GetValue(null)!, "UserBalance") != null;
         cleanupToken = existing == null ? "" : Interop.Get(existing, "_authToken")?.ToString() ?? "";
         cleanupWanted &= cleanupToken.Length != 0;
-        authenticated = false; refreshWanted = false;
+        authenticated = false; refreshWanted = false; waitingForHomeLogin = false;
         CancelRefresh(); Restore(); originalPlatforms.Clear();
         cleanupPlatform = existing == null ? "" : Interop.Get(existing, "_platform")?.ToString() ?? "";
         if (current == this) current = null;

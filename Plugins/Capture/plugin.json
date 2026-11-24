@@ -8,7 +8,7 @@
   "assembly": "Gkms.Capture.dll",
   "entryPoint": "Gkms.Plugins.Capture.Plugin",
   "author": "Gakumas Localify contributors",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "独立选择原文与贴图采集，输出到插件自身 output 目录，保留已有译文并过滤重复内容。",
   "settings": [
     { "key": "text", "label": "采集原文", "type": "boolean", "default": true,

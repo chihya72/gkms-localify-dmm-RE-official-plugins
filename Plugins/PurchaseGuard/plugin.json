@@ -8,7 +8,7 @@
   "assembly": "Gkms.PurchaseGuard.dll",
   "entryPoint": "Gkms.Plugins.PurchaseGuard.Plugin",
   "author": "Gakumas Localify contributors",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "完成 DMM 登录后，将游戏请求平台切换为 iOS，并拦截充值操作。支持运行中启用和关闭，切换后自动刷新对应平台的宝石余额。",
   "settings": [],
   "names": {
