@@ -20,7 +20,7 @@ https://raw.githubusercontent.com/chihya72/gkms-localify-dmm-RE-official-plugins
 
 ## 构建与自动发布
 
-需要 PowerShell 7、.NET SDK 8 或以上及 `Gkms.Sdk.2.0.4.nupkg`。SDK 从[框架 Release](https://github.com/chihya72/gkms-localify-dmm-RE/releases/latest) 下载，或在框架源码中打包。
+需要 PowerShell 7、.NET SDK 8 或以上及 `Gkms.Sdk.2.0.5.nupkg`。SDK 从[框架 Release](https://github.com/chihya72/gkms-localify-dmm-RE/releases/latest) 下载，或在框架源码中打包。
 
 ```powershell
 $parameters = @{
