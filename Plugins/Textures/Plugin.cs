@@ -5,7 +5,7 @@ namespace Gkms.Plugins.Textures;
 
 public sealed class Plugin : ILocalifyPlugin, IResourceReloadable, IPluginDiagnostics
 {
-    private static readonly Dictionary<string, string> files = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly Dictionary<string, List<string>> files = new(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, byte[]> loaded = new(StringComparer.OrdinalIgnoreCase);
     private static readonly Dictionary<string, string> invalid = new(StringComparer.OrdinalIgnoreCase);
     public IReadOnlyList<string> Warnings => invalid.Count == 0 ? Array.Empty<string>() :
@@ -36,21 +36,27 @@ public sealed class Plugin : ILocalifyPlugin, IResourceReloadable, IPluginDiagno
     private static void Index()
     {
         var dir = ResourceUpdater.ResourceDirectory;
-        var next = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var next = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        void Add(string key, string file)
+        {
+            if (!next.TryGetValue(key, out var candidates)) next.Add(key, candidates = new());
+            candidates.Add(file);
+        }
         var paths = Directory.Exists(dir) ? Directory.EnumerateFiles(dir, "*", SearchOption.AllDirectories).ToArray() : Array.Empty<string>();
         foreach (var file in paths)
         {
             var name = Path.GetFileName(file);
-            next.TryAdd("direct/" + Path.GetRelativePath(dir, file).Replace('\\', '/'), file);
+            Add("direct/" + Path.GetRelativePath(dir, file).Replace('\\', '/'), file);
             var category = Path.GetRelativePath(dir, file).Split(Path.DirectorySeparatorChar)[0];
             if (category is "image" or "atlas" or "others" && Path.GetExtension(file).Equals(".png", StringComparison.OrdinalIgnoreCase))
             {
-                next.TryAdd("recursive/" + category + "/" + name, file);
-                next.TryAdd("recursive/" + category + "/" + Path.GetFileNameWithoutExtension(file), file);
+                // DMM retains every matching path, in filesystem enumeration order.
+                Add("recursive/" + category + "/" + name, file);
+                Add("recursive/" + category + "/" + Path.GetFileNameWithoutExtension(file), file);
             }
         }
         files.Clear(); foreach (var pair in next) files.Add(pair.Key, pair.Value);
-        context!.Log($"已索引 {files.Values.Distinct().Count()} 张贴图，资源目录: {dir}");
+        context!.Log($"已索引 {files.Values.SelectMany(paths => paths).Distinct(StringComparer.OrdinalIgnoreCase).Count()} 张贴图，资源目录: {dir}");
     }
 
     public static string? Portable(string name) => TextureNames.Portable(name);
@@ -60,7 +66,9 @@ public sealed class Plugin : ILocalifyPlugin, IResourceReloadable, IPluginDiagno
         if (string.IsNullOrEmpty(name)) yield break;
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var key in Candidates(name))
-            if (files.TryGetValue(key, out var file) && seen.Add(file)) yield return file;
+            if (files.TryGetValue(key, out var candidates))
+                foreach (var file in candidates)
+                    if (seen.Add(file)) yield return file;
     }
     private static byte[]? FindBytes(object original, Dictionary<string, byte[]> cache, bool reload, out string file)
     {

@@ -83,7 +83,7 @@ public sealed class Plugin : ILocalifyPlugin, IPluginDiagnostics
         __0 = (T)Enum.ToObject(typeof(T), orientation == "portrait" ? 2 : 3);
     public static bool SkipNudge() => !resize && !fullscreen;
     public static bool KeepWindowProcedure(int __0, ref IntPtr __result)
-    { if (__0 != -4) return true; __result = IntPtr.Zero; return false; }
+    { if (!resize || __0 != -4) return true; __result = IntPtr.Zero; return false; }
     public static bool KeepWindowSize()
     {
         if (fullscreen) return false;

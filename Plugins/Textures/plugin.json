@@ -9,7 +9,7 @@
   "entryPoint": "Gkms.Plugins.Textures.Plugin",
   "resourceUpdater": "Gkms.Plugins.Textures.ResourceUpdater",
   "author": "Gakumas Localify contributors",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "读取本地汉化贴图，替换对应界面图片，支持资源更新与重载。",
   "settings": [
     {
@@ -29,7 +29,7 @@
       "section": "resources",
       "label": "默认更新源",
       "type": "string",
-      "default": "",
+      "default": "https://texture.gakumas.cn/api/gkms_texture_data",
       "labels": {
         "zh-TW": "預設更新來源",
         "en": "Default update source",

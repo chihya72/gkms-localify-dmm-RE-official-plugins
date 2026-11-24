@@ -8,7 +8,7 @@
   "assembly": "Gkms.Window.dll",
   "entryPoint": "Gkms.Plugins.Window.Plugin",
   "author": "Gakumas Localify contributors",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "支持自动旋转、强制竖屏、强制横屏及自由调整窗口大小。按 F11 强制在游戏窗口所在屏幕无边框全屏，再按一次恢复原位置和尺寸；全屏不受旋转方式或自由调整大小开关限制。",
   "settings": [
     {
